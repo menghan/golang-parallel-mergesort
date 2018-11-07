@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"os"
+	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -59,6 +60,14 @@ func BenchmarkMergesort(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		copy(s, ss[i%len(ss)])
 		mergesort(s)
+	}
+}
+
+func BenchmarkBuiltinSort(b *testing.B) {
+	s := make([]int, size)
+	for i := 0; i < b.N; i++ {
+		copy(s, ss[i%len(ss)])
+		sort.Ints(s)
 	}
 }
 

@@ -2,7 +2,7 @@ test:
 	go test . -v
 
 bench:
-	go test -count 10 -bench . -test.cpu 2
+	go test -bench . -test.cpu 2
 
 bench2:
 	go test -count 10 -bench sort2 -test.cpu 2
