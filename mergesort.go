@@ -6,6 +6,26 @@ import (
 
 const max = 1 << 11
 
+const bubbleMax = 1 << 3
+
+func bubbleSort(s []int) {
+	l := len(s)
+	if l <= 1 {
+		return
+	}
+
+	swapped := true
+	for swapped {
+		swapped = false
+		for i := 0; i < l-1; i++ {
+			if s[i] > s[i+1] {
+				s[i], s[i+1] = s[i+1], s[i]
+				swapped = true
+			}
+		}
+	}
+}
+
 func merge(s []int, middle int) {
 	helper := make([]int, len(s))
 	copy(helper, s)
@@ -110,6 +130,11 @@ func parallelMergesort2(s []int, helper []int) {
 	middle := l / 2
 
 	var wg *sync.WaitGroup
+
+	if l < bubbleMax {
+		bubbleSort(s)
+		return
+	}
 
 	if l > max {
 		wg = &sync.WaitGroup{}
