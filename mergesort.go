@@ -103,29 +103,35 @@ func parallelMergesort1(s []int) {
 func parallelMergesort2(s []int, helper []int) {
 	l := len(s)
 
-	if l > 1 {
-		if l <= max { // Sequential
-			middle := len(s) / 2
-			parallelMergesort2(s[:middle], helper[:middle])
-			parallelMergesort2(s[middle:], helper[middle:])
-			merge2(s, middle, helper)
-		} else { // Parallel
-			middle := l / 2
-
-			var wg sync.WaitGroup
-			wg.Add(1)
-
-			go func() {
-				defer wg.Done()
-				parallelMergesort2(s[:middle], helper[:middle])
-			}()
-
-			parallelMergesort2(s[middle:], helper[middle:])
-
-			wg.Wait()
-			merge2(s, middle, helper)
-		}
+	if l <= 1 {
+		return
 	}
+
+	middle := l / 2
+
+	var wg *sync.WaitGroup
+
+	if l > max {
+		wg = &sync.WaitGroup{}
+
+		// Parallel
+		wg.Add(1)
+		go func() {
+			parallelMergesort2(s[:middle], helper[:middle])
+			wg.Done()
+		}()
+
+	} else {
+		// Sequential
+		parallelMergesort2(s[:middle], helper[:middle])
+	}
+
+	parallelMergesort2(s[middle:], helper[middle:])
+
+	if l > max {
+		wg.Wait()
+	}
+	merge2(s, middle, helper)
 }
 
 /* Parallel 3 */
