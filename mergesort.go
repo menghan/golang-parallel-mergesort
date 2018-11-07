@@ -6,7 +6,7 @@ import (
 )
 
 const max = 1 << 11
-const mergeMax = 1 << 12
+const mergeMax = 1 << 15
 
 const bubbleMax = 1 << 3
 
