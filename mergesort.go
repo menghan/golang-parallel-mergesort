@@ -1,10 +1,12 @@
 package mergesort
 
 import (
+	"sort"
 	"sync"
 )
 
 const max = 1 << 11
+const mergeMax = 1 << 12
 
 const bubbleMax = 1 << 3
 
@@ -53,7 +55,56 @@ func merge(s []int, middle int) {
 	}
 }
 
+func search(s []int, v int) int {
+	return sort.SearchInts(s, v)
+}
+
+func mergeBig(s []int, middle int, helper []int) {
+	if len(s) <= 1 || middle == 0 {
+		return
+	}
+
+	likelyMedianLeft := middle / 2
+	likelyMedian := s[likelyMedianLeft]
+	likelyMedianRight := middle + search(s[middle:], likelyMedian)
+
+	// trans [0, .A. likelyMedianLeft, .B., middle, .C., likelyMedianRight, .D., len(s)-1]
+	// to    [0, .A. likelyMedianLeft, ..C.., ..B.., ..D..]
+
+	newCut := likelyMedianLeft + likelyMedianRight - middle
+	if newCut == 0 {
+		// A == C == 0, then, [B, D] is in order.
+		return
+	}
+
+	copy(helper, s[likelyMedianLeft:middle])
+	copy(s[likelyMedianLeft:], s[middle:likelyMedianRight])
+
+	var wg sync.WaitGroup
+	if likelyMedianLeft != 0 {
+		wg.Add(1)
+		go func() {
+			merge2(s[:newCut], likelyMedianLeft, helper[:newCut])
+			wg.Done()
+		}()
+	}
+
+	copy(s[newCut:], helper[:middle-likelyMedianLeft])
+	if middle-likelyMedianLeft != 0 {
+		merge2(s[newCut:], middle-likelyMedianLeft, helper[newCut:])
+	}
+
+	// log.Printf("From [A=%d B=%d C=%d D=%d] To [{A=%d B=%d} {C=%d D=%d}] s=%+v middle=%d", likelyMedianLeft, middle-likelyMedianLeft, likelyMedianRight-middle, len(s)-likelyMedianRight, likelyMedianLeft, newCut-likelyMedianLeft, likelyMedianRight-newCut, len(s)-likelyMedianRight, s, middle)
+
+	wg.Wait()
+}
+
 func merge2(s []int, middle int, helper []int) {
+	if len(s) > mergeMax {
+		mergeBig(s, middle, helper)
+		return
+	}
+
 	copy(helper, s[:middle])
 
 	helperLeft := 0
