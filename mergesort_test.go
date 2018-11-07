@@ -1,9 +1,10 @@
 package mergesort
 
 import (
-	"math/rand"
+	"bufio"
+	"encoding/json"
+	"os"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -13,15 +14,17 @@ const size = 100000
 var ss [][]int
 
 func init() {
-	src := rand.NewSource(time.Now().UnixNano())
-	rand := rand.New(src)
+	var s []int
+	ss = make([][]int, 0, 100)
 
-	ss = make([][]int, 0, 1000)
-	for i := 0; i < cap(ss); i++ {
-		s := make([]int, size)
-		for i := 0; i < size; i++ {
-			s[i] = rand.Intn(size)
+	f, _ := os.Open("testcases.txt")
+	bf := bufio.NewReader(f)
+	for {
+		line, _ := bf.ReadString('\n')
+		if len(line) == 0 {
+			break
 		}
+		json.Unmarshal([]byte(line), &s)
 		ss = append(ss, s)
 	}
 }
