@@ -39,9 +39,9 @@ func merge2(s []int, middle int, helper []int) {
 	helperLeft := 0
 	helperRight := middle
 	current := 0
-	high := len(s) - 1
+	high := len(s)
 
-	for helperLeft <= middle-1 && helperRight <= high {
+	for helperLeft < middle && helperRight < high {
 		if helper[helperLeft] <= helper[helperRight] {
 			s[current] = helper[helperLeft]
 			helperLeft++
