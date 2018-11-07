@@ -43,7 +43,8 @@ func TestParallelMergesort1(t *testing.T) {
 
 func TestParallelMergesort2(t *testing.T) {
 	s := []int{5, 8, 9, 5, 0, 10, 1, 6}
-	parallelMergesort2(s)
+	helper := make([]int, len(s))
+	parallelMergesort2(s, helper)
 	assert.Equal(t, []int{0, 1, 5, 5, 6, 8, 9, 10}, s)
 }
 
@@ -71,9 +72,10 @@ func BenchmarkParallelMergesort1(b *testing.B) {
 
 func BenchmarkParallelMergesort2(b *testing.B) {
 	s := make([]int, size)
+	helper := make([]int, size)
 	for i := 0; i < b.N; i++ {
 		copy(s, ss[i%len(ss)])
-		parallelMergesort2(s)
+		parallelMergesort2(s, helper)
 	}
 }
 

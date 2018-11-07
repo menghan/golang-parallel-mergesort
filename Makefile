@@ -1,5 +1,5 @@
 test:
-	go test .
+	go test . -v
 
 bench:
 	go test -count 10 -bench . -test.cpu 2
@@ -7,8 +7,11 @@ bench:
 bench2:
 	go test -count 10 -bench sort2 -test.cpu 2
 
-benchp:
-	go test -bench . -test.cpu 2 -test.cpuprofile cpu.pprof -test.memprofile mem.pprof -test.benchmem
+compile_test:
+	go test -c .
 
-benchp2:
-	go test -bench sort2 -test.cpu 2 -test.cpuprofile cpu.pprof -test.memprofile mem.pprof -test.benchmem
+benchp: compile_test
+	./golang-parallel-mergesort.test -test.bench . -test.cpu 2 -test.cpuprofile cpu.pprof -test.memprofile mem.pprof -test.benchmem
+
+benchp2: compile_test
+	./golang-parallel-mergesort.test -test.bench sort2 -test.cpu 2 -test.cpuprofile cpu.pprof -test.memprofile mem.pprof -test.benchmem
