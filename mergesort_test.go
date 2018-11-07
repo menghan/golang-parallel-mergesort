@@ -54,25 +54,33 @@ func TestParallelMergesort3(t *testing.T) {
 }
 
 func BenchmarkMergesort(b *testing.B) {
+	s := make([]int, size)
 	for i := 0; i < b.N; i++ {
-		mergesort(ss[i%len(ss)])
+		copy(s, ss[i%len(ss)])
+		mergesort(s)
 	}
 }
 
 func BenchmarkParallelMergesort1(b *testing.B) {
+	s := make([]int, size)
 	for i := 0; i < b.N; i++ {
-		parallelMergesort1(ss[i%len(ss)])
+		copy(s, ss[i%len(ss)])
+		parallelMergesort1(s)
 	}
 }
 
 func BenchmarkParallelMergesort2(b *testing.B) {
+	s := make([]int, size)
 	for i := 0; i < b.N; i++ {
-		parallelMergesort2(ss[i%len(ss)])
+		copy(s, ss[i%len(ss)])
+		parallelMergesort2(s)
 	}
 }
 
 func BenchmarkParallelMergesort3(b *testing.B) {
+	s := make([]int, size)
 	for i := 0; i < b.N; i++ {
-		parallelMergesort3(ss[i%len(ss)])
+		copy(s, ss[i%len(ss)])
+		parallelMergesort3(s)
 	}
 }
