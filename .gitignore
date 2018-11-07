@@ -1,2 +1,5 @@
 .idea
 golang-parallel-mergesort.iml
+bench-*.txt
+*.pprof
+golang-parallel-mergesort.test
