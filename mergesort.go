@@ -52,10 +52,8 @@ func merge2(s []int, middle int, helper []int) {
 		current++
 	}
 
-	for helperLeft <= middle-1 {
-		s[current] = helper[helperLeft]
-		current++
-		helperLeft++
+	if helperLeft < middle {
+		copy(s[current:], helper[helperLeft:middle])
 	}
 }
 
